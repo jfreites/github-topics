@@ -6,6 +6,6 @@ If I click on an element I want to see the full description.
 
 ## Repositories
 
-* clone this project
-* API (https://github.com/jfreites/github-topics/tree/master/github-topics-api)
-* Client (https://github.com/jfreites/github-topics/tree/master/github-topics-client)
+* clone this project, for individual instructions check following
+    * API (https://github.com/jfreites/github-topics/tree/master/github-topics-api)
+    * Client (https://github.com/jfreites/github-topics/tree/master/github-topics-client)

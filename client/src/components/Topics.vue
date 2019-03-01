@@ -15,17 +15,19 @@
           </div>
 
           <div v-if="loading">
-            <p>Loading</p>
+            <p>Loading...</p>
           </div>
           <div v-else>
             <div class="box" v-for="topic in topics">
               <h3>{{ topic.name }}</h3>
-              <p>{{ topic.short_description || '(No short description)' }}</p>
-              <div class="field is-grouped is-grouped-centered">
-                <div class="control">
-                  <button class="button is-dark" @click="seeDescription(topic.name)">read more</button>
-                </div>
-              </div>
+              <p class="description">{{ topic.description || '(No description)' }}</p>
+            </div>
+
+            <div class="box" v-if="paginate">
+              <nav class="pagination" role="navigation" aria-label="pagination">
+                <a class="pagination-previous" @click="prevPage()" :disabled="disabledPrev">Previous</a>
+                <a class="pagination-next" @click="nextPage()">Next page</a>
+              </nav>
             </div>
           </div>
         </div>
@@ -40,15 +42,33 @@ export default {
     return {
       loading: false,
       search: '',
-      topics: []
+      topics: [],
+      currentPage: 1
+    }
+  },
+  computed: {
+    paginate () {
+      return this.topics.length > 0 || false
+    },
+    disabledPrev () {
+      return this.currentPage == 1 || false
     }
   },
   methods: {
-    async performSearch () {
+    async performSearch (page = 1) {
       this.loading = true
-      const response = await TopicsService.fetchTopics(this.search)
+      const response = await TopicsService.fetchTopics(this.search, page)
       this.loading = false
       this.topics = response.data.items
+      this.links = response.data.links
+    },
+    nextPage () {
+      this.currentPage = this.links.next.page
+      this.performSearch(this.currentPage)
+    },
+    prevPage () {
+      this.currentPage = this.links.prev.page
+      this.performSearch(this.currentPage)
     }
   }
 }
@@ -58,5 +78,8 @@ export default {
 h3 {
   font-size: 25px;
   color: #ecb931;
+}
+.description {
+  text-align: justify;
 }
 </style>
